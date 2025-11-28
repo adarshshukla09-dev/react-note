@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function LeftSide({ activeMenu, setActiveMenu, onOpenCategory }) {
   const navButtonClasses =
     "w-full p-3 pl-4 flex items-center text-left rounded-xl font-medium transition-colors hover:bg-gray-100";
+  const navigate = useNavigate();
 
   const isActive = (menu) =>
     activeMenu === menu
@@ -35,10 +37,16 @@ function LeftSide({ activeMenu, setActiveMenu, onOpenCategory }) {
         <button onClick={() => setActiveMenu("All")} className={`${navButtonClasses} ${isActive("All")}`}>
           All Notes
         </button>
+<button
+  onClick={() => {
+    setActiveMenu("Favorites");
+    navigate("/Favourite");
+  }}
+  className={`${navButtonClasses} ${isActive("Favorites")}`}
+>
+  Favorites
+</button>
 
-        <button onClick={() => setActiveMenu("Favorites")} className={`${navButtonClasses} ${isActive("Favorites")}`}>
-          Favorites
-        </button>
 
         <button
           onClick={() => {

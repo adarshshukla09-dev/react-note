@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Star, Pencil, Trash2 } from "lucide-react";
 import { useNoteContext } from "../context/NoteContext";
-
+import { useNavigate } from "react-router-dom";
+import { updateNote, deleteNote } from "../api/Note";
+import axios  from "axios";
 const getColorClasses = (accent) => {
   switch (accent) {
     case "yellow":
@@ -35,17 +37,48 @@ const getColorClasses = (accent) => {
   }
 };
 
-function Card({ note, onDelete, onEdit }) {
+function Card({ note, onDelete }) {
+  const { setSelectedNote, setEditNote } = useNoteContext();
+  const { bg, starColor } = getColorClasses(note.accentColor);
 
-  const { setSelectedNote } = useNoteContext();
-  const { bg, starColor, tagBg, tagText } = getColorClasses(note.accentColor);
   const [isFavorite, setIsFavorite] = useState(note.isFavorite || false);
+  const navigate = useNavigate();
 
   const formattedDate = new Date(note.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+
+  // ⭐ FIXED FAVORITE TOGGLE
+  const handleFavoriteToggle = async (e) => {
+    e.stopPropagation();
+
+    const updatedFavorite = !isFavorite;
+
+    try {
+    await axios.put(
+  `http://localhost:5000/api/notes/${note._id}`,
+  { isFavorite: updatedFavorite },
+  { withCredentials: true }
+);
+
+      setIsFavorite(updatedFavorite);
+    } catch (error) {
+      console.error("Failed to update favorite:", error);
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+
+    try {
+      await deleteNote(note._id);
+      onDelete(note._id);
+    } catch (error) {
+      console.error("Failed to delete note:", error);
+    }
+  };
 
   return (
     <div
@@ -55,12 +88,10 @@ function Card({ note, onDelete, onEdit }) {
       hover:border-indigo-400 hover:shadow-xl cursor-pointer 
       transition-all duration-300 ease-in-out`}
     >
-
       {/* Favorite Button */}
       <button
         onClick={(e) => {
-          e.stopPropagation();
-          setIsFavorite(!isFavorite);
+          handleFavoriteToggle(e);
         }}
         className="absolute top-2 right-2 p-2 rounded-full hover:bg-black/5"
       >
@@ -70,9 +101,9 @@ function Card({ note, onDelete, onEdit }) {
         />
       </button>
 
-      {/* Title + Preview */}
+      {/* Title and Description */}
       <div className="flex flex-col mb-4">
-        <h3 className="text-xl font-extrabold text-[#1A1A1A] mb-2 pr-10 leading-snug">
+        <h3 className="text-xl font-extrabold text-[#1A1A1A] mb-2 pr-10">
           {note.title}
         </h3>
 
@@ -81,36 +112,32 @@ function Card({ note, onDelete, onEdit }) {
         </p>
       </div>
 
-    {/* Footer: Date + Actions */}
-<div className="flex items-center justify-between mt-auto pt-2 border-t border-black/5">
-  <span className="text-xs text-gray-500 font-medium tracking-wider">
-    LAST EDITED: {formattedDate}
-  </span>
+      {/* Footer: Date + Edit/Delete */}
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-black/5">
+        <span className="text-xs text-gray-500 font-medium tracking-wider">
+          LAST EDITED: {formattedDate}
+        </span>
 
-  {/* Edit/Delete Buttons INLINE with date */}
-  <div className="flex gap-2">
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        onEdit?.(note);
-      }}
-      className="p-1.5 hover:bg-indigo-100 text-indigo-600 rounded-lg"
-    >
-      <Pencil size={16} />
-    </button>
+        <div className="flex gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditNote(note);
+              navigate(`/edit/${note._id}`);
+            }}
+            className="p-1.5 hover:bg-indigo-100 text-indigo-600 rounded-lg"
+          >
+            <Pencil size={16} />
+          </button>
 
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        onDelete?.(note);
-      }}
-      className="p-1.5 hover:bg-red-100 text-red-600 rounded-lg"
-    >
-      <Trash2 size={16} />
-    </button>
-  </div>
-</div>
-
+          <button
+            onClick={handleDelete}
+            className="p-1.5 hover:bg-red-100 text-red-600 rounded-lg"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

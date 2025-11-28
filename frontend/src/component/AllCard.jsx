@@ -18,21 +18,20 @@ function AllCard() {
 
     fetchNotes();
   }, []);
-
+const handleDeleteNote = (id) => {
+  setNotes(prev => prev.filter(notes => notes._id !== id));
+};
   return (
     <div className="p-4 sm:p-8 bg-gray-50 min-h-screen">
       <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-6 sm:mb-8 border-b-2 border-indigo-100 pb-2">
       Notes
       </h1>
-      
-      {/* 🚀 Key Change: Setting a fixed 3 columns across all responsive breakpoints (except mobile) */}
-      {/* Using 'lg:grid-cols-3' for desktop/large screens and 'md:grid-cols-2' for tablets is often better */}
-      {/* But to ensure exactly 3, we use 'grid-cols-3' and override for smaller screens */}
+     
       <div className="grid grid-cols-1 md:grid-cols-2 **lg:grid-cols-3** **xl:grid-cols-3** gap-8"> 
         {notes.map((note) => (
-          // **Crucial Assumption**: The <Card /> component must have 'w-full h-full' or similar 
-          // uniform height/width settings to look "same" and "cover the whole card" within the grid cell.
-          <Card key={note._id} note={note} />
+         
+          <Card key={note._id} note={note} 
+  onDelete={handleDeleteNote} />
         ))}
 
         <Link to="/Create">

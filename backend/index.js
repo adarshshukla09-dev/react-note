@@ -3,23 +3,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./src/config/db.js";
-// ⚠️ Assuming your notes routes are defined here
 import noteRoutes from "./src/Routes/notes.routes.js";
-// ⚠️ Assuming your auth routes are defined here
 import authRoutes from "./src/Routes/auth.routes.js";
 
-// Load environment variables from .env file
 dotenv.config();
 
-// Initialize the Express app
 const app = express();
 
-// --- 1. Middleware Setup ---
-
-// Enable CORS for all routes (important for frontend communication)
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend URL
+    origin: "http://localhost:5173",
     credentials: true, // allow cookies / auth headers if needed
   })
 );

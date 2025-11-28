@@ -8,56 +8,61 @@ import EditePage from "./pages/EditePage";
 import Favourite from "./pages/Favourite";
 import { AuthProvider } from "./context/UserContext";
 import ProtectedRoute from "./component/ProtectedRoute";
-
+import { NoteProvider } from "./context/NoteContext";
 function App() {
   return (
     <AuthProvider>
-      <Routes>
+      <NoteProvider>     {/* <-- wrap ALL routes once here */}
 
-        {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Create"
-          element={
-            <ProtectedRoute>
-              <CreatePage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Create"
+            element={
+              <ProtectedRoute>
+                <CreatePage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/Favourite"
-          element={
-            <ProtectedRoute>
-              <Favourite />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/Favourite"
+            element={
+          
+                <Favourite />
+              
+            }
+          />
 
-        <Route
-          path="/Edit"
-          element={
-            <ProtectedRoute>
-              <EditePage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditePage />
+              </ProtectedRoute>
+            }
+          />
+             <Route
+            path="/del/:id"
+          
+          />
 
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
 
-      </Routes>
+      </NoteProvider>
     </AuthProvider>
   );
 }
+
 
 export default App;

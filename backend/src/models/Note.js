@@ -70,15 +70,6 @@ NoteSchema.pre("save", function () {
 });
 
 // Auto-generate preview on findOneAndUpdate
-NoteSchema.pre("findOneAndUpdate", function (next) {
-  const update = this.getUpdate();
-  if (update.content) {
-    update.preview =
-      update.content.substring(0, 120) +
-      (update.content.length > 120 ? "..." : "");
-    this.setUpdate(update);
-  }
-  next();
-});
+
 const Note = mongoose.model("Note", NoteSchema);
 export default Note;
