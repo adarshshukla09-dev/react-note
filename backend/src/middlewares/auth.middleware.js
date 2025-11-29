@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-
+import User from "../models/User.js";
 export const protect = async (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
@@ -8,8 +8,7 @@ export const protect = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = { id: decoded.id };
-
+    req.user = await User.findById(decoded.id).select("-password");
     next();
   } catch (error) {
     console.error("Auth Error:", error);

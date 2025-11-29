@@ -1,33 +1,48 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { api } from "../api/User";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const Register = async ({ name, email, password }) => {
+  const register = async ({ name, email, password }) => {
     try {
       const res = await api.post("/auth/register", { name, email, password });
-      setUser(res.data.user);  // ✅ FIXED
+      setUser(res.data.user);
       return { ok: true };
     } catch (err) {
       return { ok: false, message: err.response?.data?.message };
     }
   };
 
-  const Login = async ({ email, password }) => {
+  const login = async ({ email, password }) => {
     try {
       const res = await api.post("/auth/login", { email, password });
-      setUser(res.data.user); // ✅ FIXED
+      setUser(res.data.user);
       return { ok: true };
     } catch (err) {
       return { ok: false, message: err.response?.data?.message };
     }
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/auth/me", { withCredentials: true });
+        setUser(res.data);
+      } catch (err) {
+        setUser(null);
+      }
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, []); // <-- FIX
+
   const logout = async () => {
-    await api.get("/auth/logout");
+    await api.post("/auth/logout", {}, { withCredentials: true });
     setUser(null);
   };
 
@@ -35,9 +50,11 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        login: Login,       // exposed lowercase
-        register: Register, // exposed lowercase
+        login,
+        register,
         logout,
+        loading,
+        setLoading,
         isAuthenticated: !!user,
       }}
     >

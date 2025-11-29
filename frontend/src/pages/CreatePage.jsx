@@ -42,39 +42,6 @@ const BG_COLOR_OPTIONS = [
   },
 ];
 
-// ------------------ Toolbar ------------------
-const Toolbar = () => (
-  <div className="flex gap-2 p-3 border-b border-[#EAEAEA] bg-white sticky top-0 z-10">
-    <button className="toolbar-icon" title="Bold">
-      B
-    </button>
-    <button className="toolbar-icon" title="Italic">
-      I
-    </button>
-    <button className="toolbar-icon">&#8226; List</button>
-    <button className="toolbar-icon">Image</button>
-    <button className="toolbar-icon">Link</button>
-
-    <style jsx>{`
-      .toolbar-icon {
-        background: white;
-        color: #666;
-        border: 1px solid #e4e4e4;
-        padding: 6px 12px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.2s;
-      }
-      .toolbar-icon:hover {
-        background-color: #4b65f6;
-        color: white;
-        border-color: #4b65f6;
-      }
-    `}</style>
-  </div>
-);
 
 // ------------------ Create Page ------------------
 function CreatePage() {
@@ -159,7 +126,6 @@ function CreatePage() {
         }}
       />
 
-      <Toolbar />
 
       {/* Category + Color Selectors */}
       <div className="flex justify-between items-center p-4 md:px-10 border-b border-[#EAEAEA]">

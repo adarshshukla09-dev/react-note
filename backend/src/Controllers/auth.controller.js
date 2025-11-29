@@ -23,10 +23,10 @@ export const register = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
 
-      sameSite: "Strict",
+      sameSite: "None",
     });
 
     res.status(201).json({
@@ -54,9 +54,9 @@ export const Login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true, // Makes the cookie inaccessible to client-side JS (more secure)
-      secure: process.env.NODE_ENV === "production", // Only transmit over HTTPS in production
-      maxAge: 3600000, // Cookie expiration (e.g., 1 hour, matches token expiration)
-      sameSite: "Strict", // Recommended for security
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "None",
     });
 
     // --- Change the response body to not include the token ---
@@ -67,6 +67,21 @@ export const Login = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error during login");
+  }
+};
+// authController.js
+export const getUser = async (req, res) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "Not authenticated" });
+
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 };
 

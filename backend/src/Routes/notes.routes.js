@@ -22,7 +22,7 @@ router.get("/", protect, getAllNotes);
 router.get("/:id", protect, getNoteById);
 
 // Update a note by ID
-router.put("/:id", protect, updateNote);
+router.put("edit/:id", protect, updateNote);
 
 // Delete a note by ID
 router.delete("/:id", protect, deleteNote);

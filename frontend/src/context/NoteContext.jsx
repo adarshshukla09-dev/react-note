@@ -7,6 +7,8 @@ export const NoteProvider = ({ children }) => {
   const [selectedNote, setSelectedNote] = useState(null);
   const [editNote, setEditNote] = useState(null);
 const[fav,isFav]=useState([])
+const [searchQuery, setSearchQuery] = useState("");
+
   const [notes, setNote] = useState([]);
   return (
     <NoteContext.Provider
@@ -17,7 +19,10 @@ const[fav,isFav]=useState([])
         setEditNote,
        fav,isFav,
         notes,
-        setNote,
+        setNote, 
+          searchQuery,
+  setSearchQuery,
+
       }}
     >
       {children}

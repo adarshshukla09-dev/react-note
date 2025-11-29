@@ -68,7 +68,11 @@ function Card({ note, onDelete }) {
       console.error("Failed to update favorite:", error);
     }
   };
-
+const handleEdit = (e) => {
+    e.stopPropagation();
+    setEditNote(note); // Set the note being edited in the context
+    navigate(`/edit/${note._id}`); // Navigate to a new edit route
+  };
   const handleDelete = async (e) => {
     e.stopPropagation();
 
@@ -103,13 +107,14 @@ function Card({ note, onDelete }) {
 
       {/* Title and Description */}
       <div className="flex flex-col mb-4">
-        <h3 className="text-xl font-extrabold text-[#1A1A1A] mb-2 pr-10">
-          {note.title}
-        </h3>
+        <h3 className="text-xl font-extrabold text-[#1A1A1A] mb-2 pr-10 break-words">
+  {note.title}
+</h3>
 
-        <p className="text-sm text-gray-700 line-clamp-4 leading-relaxed whitespace-pre-wrap">
-          {note.preview}
-        </p>
+       <p className="text-sm text-gray-700 line-clamp-4 leading-relaxed whitespace-pre-wrap break-words">
+  {note.preview}
+</p>
+
       </div>
 
       {/* Footer: Date + Edit/Delete */}
@@ -119,17 +124,7 @@ function Card({ note, onDelete }) {
         </span>
 
         <div className="flex gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setEditNote(note);
-              navigate(`/edit/${note._id}`);
-            }}
-            className="p-1.5 hover:bg-indigo-100 text-indigo-600 rounded-lg"
-          >
-            <Pencil size={16} />
-          </button>
-
+    
           <button
             onClick={handleDelete}
             className="p-1.5 hover:bg-red-100 text-red-600 rounded-lg"

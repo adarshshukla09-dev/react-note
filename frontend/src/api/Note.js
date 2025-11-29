@@ -18,7 +18,7 @@ export const getNotes = (id) => api.get(`/${id}`);
 export const createNote = (noteData) => api.post("/create", noteData);
 
 // Update a note
-export const updateNote = (id, data) => api.put(`/${id}`, data);
+export const updateNote = (id, data) => api.put(`edit/${id}`, data);
 
 // Delete a note
 export const deleteNote = (id) => api.delete(`/${id}`);
